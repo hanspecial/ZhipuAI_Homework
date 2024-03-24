@@ -27,7 +27,7 @@ import api
 from api import generate_chat_scene_prompt, generate_role_appearance, get_characterglm_response, generate_cogview_image
 from data_types import TextMsg, ImageMsg, TextMsgList, MsgList, filter_text_msg
 
-st.set_page_config(page_title="CharacterGLM API Demo", page_icon="🤖", layout="wide")
+st.set_page_config(page_title="CharacterGLM API Homework", page_icon="🤖", layout="wide")
 debug = os.getenv("DEBUG", "").lower() in ("1", "yes", "y", "true", "t", "on")
 
 
@@ -141,7 +141,8 @@ def draw_new_image():
 button_labels = {
     "clear_meta": "清空人设",
     "clear_history": "清空对话历史",
-    "gen_picture": "生成图片"
+    "gen_picture": "生成图片",
+    "show_history": "保存对话历史"
 }
 if debug:
     button_labels.update({
@@ -176,6 +177,17 @@ with st.container():
     with button_key_to_col["gen_picture"]:
         gen_picture = st.button(button_labels["gen_picture"], key="gen_picture")
 
+
+    with button_key_to_col["show_history"]:
+            show_history = st.button(button_labels["show_history"], key="show_history")
+            if show_history:
+               if st.session_state['history']:
+                print(f"history = {st.session_state['history']}")
+                historyfile = open("c:\\save_history.txt", 'w')
+                historyfile.write(" ".join(map(str,st.session_state["history"])))
+                historyfile.close()
+                st.markdown("已将会话内容存入文件 c:\\save_history.txt")
+
     if debug:
         with button_key_to_col["show_api_key"]:
             show_api_key = st.button(button_labels["show_api_key"], key="show_api_key")
@@ -187,10 +199,7 @@ with st.container():
             if show_meta:
                 print(f"meta = {st.session_state['meta']}")
         
-        with button_key_to_col["show_history"]:
-            show_history = st.button(button_labels["show_history"], key="show_history")
-            if show_history:
-                print(f"history = {st.session_state['history']}")
+
 
 
 # 展示对话历史
